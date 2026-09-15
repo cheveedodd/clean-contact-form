@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "clean-contact-form/form",
+  "title": "Clean Contact Form",
+  "category": "widgets",
+  "icon": "email",
+  "description": "Stateless, privacy-first contact form with built-in anti-spam.",
+  "keywords": ["contact", "form", "email", "spam"],
+  "supports": {
+    "color": {
+      "background": true,
+      "text": true,
+      "link": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    },
+    "align": ["wide", "full"]
+  },
+  "editorScript": "file:./block.js",
+  "style": "file:./style.css"
+}

@@ -1,0 +1,121 @@
+/* CSS Variables for Dynamic Customization */
+.wp-block-clean-contact-form-form {
+    --ccf-label-color: #ffffff;
+    --ccf-input-bg: #1a1a1a;
+    --ccf-input-text: #ffffff;
+    --ccf-input-border: #444444;
+    --ccf-focus-border: #ffffff;
+    --ccf-btn-bg: #ffffff;
+    --ccf-btn-text: #000000;
+    --ccf-btn-hover-bg: #cccccc;
+}
+
+/* Container Spacing & Alignment */
+.custom-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.custom-contact-form p {
+    margin: 0;
+}
+
+/* High-Contrast Visible Labels */
+.custom-contact-form label {
+    display: block;
+    color: var(--ccf-label-color) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Input Fields */
+.custom-contact-form input[type="text"],
+.custom-contact-form input[type="email"],
+.custom-contact-form textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+    background-color: var(--ccf-input-bg) !important;
+    color: var(--ccf-input-text) !important;
+    border: 1px solid var(--ccf-input-border) !important;
+    border-radius: 0px;
+    padding: 0.85rem 1rem;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Input Focus States */
+.custom-contact-form input[type="text"]:focus,
+.custom-contact-form input[type="email"]:focus,
+.custom-contact-form textarea:focus {
+    outline: none !important;
+    border-color: var(--ccf-focus-border) !important;
+    box-shadow: 0 0 0 1px var(--ccf-focus-border);
+}
+
+/* Styled Submit Button */
+.custom-contact-form input[type="submit"] {
+    background-color: var(--ccf-btn-bg) !important;
+    color: var(--ccf-btn-text) !important;
+    border: none !important;
+    padding: 0.85rem 1.75rem;
+    font-family: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin-left: auto;
+}
+
+.custom-contact-form input[type="submit"]:hover {
+    background-color: var(--ccf-btn-hover-bg) !important;
+    color: var(--ccf-btn-text) !important;
+}
+
+/* Group wrapper spacing */
+.cf-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Align submit button right */
+.cf-submit-group {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Base Alert Banner Layout */
+.cf-message {
+    max-width: 600px;
+    margin: 0 auto 1.5rem auto;
+    padding: 1rem 1.25rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 0px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Success Banner */
+.cf-message.cf-success {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #22c55e;
+    border-left: 5px solid #22c55e;
+}
+
+/* Error Banner */
+.cf-message.cf-error {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #ef4444;
+    border-left: 5px solid #ef4444;
+}
