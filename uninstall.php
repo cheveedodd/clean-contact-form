@@ -17,12 +17,8 @@ $ccf_options = array(
     'ccf_subject_prefix',
     'ccf_disable_reply_to',
     'ccf_enable_autoresponder',
-    
-    // Admin Email Templates
     'ccf_admin_email_subject',
     'ccf_admin_email_body',
-
-    // Autoresponder Email Templates
     'ccf_autoresponder_subject',
     'ccf_autoresponder_body',
 
