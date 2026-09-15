@@ -13,6 +13,8 @@ A lightweight, zero-database, privacy-first WordPress form plugin offering a cus
 
 Custom Contact Form & Mailing List provides a clean, modular solution for adding a simple contact/mailing list forms to your WordPress site. Built with support for both Gutenberg blocks and shortcodes, the plugin includes many customization optins including SMTP without the need for third party assets.
 
+NOTE: This project was built for my personal use to fit very specific needs. I doubt it conforms to any sort of proper coding standard and definiltely isn't ready for release on the wider WordPress ecosystem.
+
 = Included Forms =
 
 1. **Contact Form**
