@@ -39,14 +39,14 @@ add_action( 'enqueue_block_editor_assets', 'ccf_enqueue_custom_css' );
 function ccf_enqueue_custom_css() {
     $dynamic_vars = "
         .wp-block-clean-contact-form-form {
-            --ccf-label-color: " . get_option( 'ccf_color_label', '#ffffff' ) . ";
-            --ccf-input-bg: " . get_option( 'ccf_color_input_bg', '#1a1a1a' ) . ";
-            --ccf-input-text: " . get_option( 'ccf_color_input_text', '#ffffff' ) . ";
-            --ccf-input-border: " . get_option( 'ccf_color_input_border', '#444444' ) . ";
-            --ccf-focus-border: " . get_option( 'ccf_color_focus_border', '#ffffff' ) . ";
-            --ccf-btn-bg: " . get_option( 'ccf_color_btn_bg', '#ffffff' ) . ";
-            --ccf-btn-text: " . get_option( 'ccf_color_btn_text', '#000000' ) . ";
-            --ccf-btn-hover-bg: " . get_option( 'ccf_color_btn_hover_bg', '#cccccc' ) . ";
+            --ccf-label-color: " . ccf_get_option( 'ccf_color_label' ) . ";
+            --ccf-input-bg: " . ccf_get_option( 'ccf_color_input_bg' ) . ";
+            --ccf-input-text: " . ccf_get_option( 'ccf_color_input_text' ) . ";
+            --ccf-input-border: " . ccf_get_option( 'ccf_color_input_border' ) . ";
+            --ccf-focus-border: " . ccf_get_option( 'ccf_color_focus_border' ) . ";
+            --ccf-btn-bg: " . ccf_get_option( 'ccf_color_btn_bg' ) . ";
+            --ccf-btn-text: " . ccf_get_option( 'ccf_color_btn_text' ) . ";
+            --ccf-btn-hover-bg: " . ccf_get_option( 'ccf_color_btn_hover_bg' ) . ";
         }
     ";
 
@@ -72,20 +72,21 @@ function ccf_mailing_list_shortcode_handler() {
 // Contact Form Handler & Output
 function ccf_render_form_html() {
     $output      = '';
-    $msg_success = esc_html( get_option( 'ccf_msg_success', 'Thank you! Your message has been sent.' ) );
-    $msg_error   = esc_html( get_option( 'ccf_msg_error', 'Please fill out all fields with a valid email address.' ) );
+    $msg_success = esc_html( ccf_get_option( 'ccf_msg_success' ) );
+    $msg_error   = esc_html( ccf_get_option( 'ccf_msg_error' ) );
+    $defaults = ccf_get_default_options();
 
     $is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
     if ( ! $is_rest_request && isset( $_POST['cf_submitted'] ) ) {
         
         // Anti-Spam: Honeypot
-        if ( get_option( 'ccf_enable_honeypot', 1 ) && ! empty( $_POST['cf_website'] ) ) {
+        if ( ccf_get_option( 'ccf_enable_honeypot' ) && ! empty( $_POST['cf_website'] ) ) {
             return '<div class="cf-message cf-success">' . $msg_success . '</div>';
         }
 
         // Anti-Spam: Time Check
-        if ( get_option( 'ccf_enable_timecheck', 1 ) ) {
+        if ( ccf_get_option( 'ccf_enable_timecheck' ) ) {
             $load_time = isset( $_POST['cf_time'] ) ? intval( $_POST['cf_time'] ) : 0;
             if ( ( time() - $load_time ) < 3 ) {
                 return '<div class="cf-message cf-success">' . $msg_success . '</div>';
@@ -145,9 +146,9 @@ function ccf_render_form_html() {
 
                 $admin_mail = ccf_get_parsed_email(
                     'ccf_admin_email_subject',
-                    '[{site_name}] New Message from {name}',
+                    $defaults['ccf_admin_email_subject'],
                     'ccf_admin_email_body',
-                    "Name: {name}\nEmail: {email}\n\nMessage:\n{message}",
+                    $defaults['ccf_admin_email_body'],
                     $template_data
                 );
 
@@ -160,9 +161,9 @@ function ccf_render_form_html() {
                     if ( get_option( 'ccf_enable_autoresponder', 0 ) ) {
                         $auto_mail = ccf_get_parsed_email(
                             'ccf_autoresponder_subject',
-                            'We received your message!',
+                            $defaults['ccf_autoresponder_subject'],
                             'ccf_autoresponder_body',
-                            "Hi {name},\n\nThanks for reaching out! We received your message and will get back to you soon.\n\nYour Message:\n{message}",
+                            $defaults['ccf_autoresponder_body'],
                             $template_data
                         );
 
@@ -245,16 +246,17 @@ function ccf_render_form_html() {
 // Mailing List Handler & Output
 function ccf_render_mailing_list_form_html() {
     $output      = '';
-    $msg_success = esc_html( get_option( 'ccf_msg_success', 'Thank you for subscribing!' ) );
-    $msg_error   = esc_html( get_option( 'ccf_msg_error', 'Please enter a valid email address.' ) );
+    $msg_success = esc_html( ccf_get_option( 'ccf_msg_success' ) );
+    $msg_error   = esc_html( ccf_get_option( 'ccf_msg_error' ) );
+    $defaults = ccf_get_default_options();
 
     $is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
     if ( ! $is_rest_request && isset( $_POST['ccf_ml_submitted'] ) ) {
         
         // Anti-Spam: Honeypot & Timecheck
-        if ( ( get_option( 'ccf_enable_honeypot', 1 ) && ! empty( $_POST['cf_website'] ) ) ||
-             ( get_option( 'ccf_enable_timecheck', 1 ) && ( time() - intval( $_POST['cf_time'] ?? 0 ) ) < 3 ) ) {
+        if ( ( ccf_get_option( 'ccf_enable_honeypot' ) && ! empty( $_POST['cf_website'] ) ) ||
+             ( ccf_get_option( 'ccf_enable_timecheck' ) && ( time() - intval( $_POST['cf_time'] ?? 0 ) ) < 3 ) ) {
             return '<div class="cf-message cf-success">' . $msg_success . '</div>';
         }
 
@@ -293,9 +295,9 @@ function ccf_render_mailing_list_form_html() {
 
             $mail = ccf_get_parsed_email(
                 'ccf_admin_email_subject',
-                '[{site_name}] New Mailing List Subscriber',
+                $defaults['ccf_admin_email_subject'],
                 'ccf_admin_email_body',
-                "New Subscriber Email: {email}\n\nSubscribed on: {date}",
+                $defaults['ccf_admin_email_body'],
                 $template_data
             );
 
@@ -304,6 +306,19 @@ function ccf_render_mailing_list_form_html() {
             remove_action( 'phpmailer_init', 'ccf_apply_smtp_settings' );
 
             if ( $sent ) {
+                $auto_mail = ccf_get_parsed_email(
+                    'ccf_newsletter_autoresponder_subject',
+                    $defaults['ccf_newsletter_autoresponder_subject'],
+                    'ccf_newsletter_autoresponder_body',
+                    $defaults['ccf_newsletter_autoresponder_body'],
+                    $template_data
+                );
+
+                wp_schedule_single_event(
+                    time() + 5,
+                    'ccf_send_deferred_autoresponder',
+                    array( $email, $auto_mail['subject'], $auto_mail['body'], array( 'Content-Type: text/plain; charset=UTF-8', 'From: ' . $site_from ) )
+                );
                 return '<div class="cf-message cf-success">' . $msg_success . '</div>';
             } else {
                 return '<div class="cf-message cf-error">Subscription failed. Please try again later.</div>';

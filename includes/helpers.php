@@ -3,6 +3,38 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Helper: Get Default Options
+function ccf_get_default_options() {
+    return array(
+        'ccf_enable_honeypot'                  => 1,
+        'ccf_enable_timecheck'                 => 1,
+        'ccf_msg_success'                      => 'Thank you! Your message has been sent.',
+        'ccf_msg_error'                        => 'Please fill out all fields including a valid email address.',
+        'ccf_admin_email_subject'              => '[{site_name}] New Contact Form Submission',
+        'ccf_admin_email_body'                 => "You received a new message from {site_name}.\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}\n\nSent on: {date}",
+        'ccf_autoresponder_subject'            => 'We received your message!',
+        'ccf_autoresponder_body'               => "Hi {name},\n\nThanks for reaching out! We received your message and will get back to you shortly.\n\nYour Message:\n{message}\n\nBest regards,\n{site_name}",
+        'ccf_newsletter_autoresponder_subject' => 'Thanks for subscribing!',
+        'ccf_newsletter_autoresponder_body'    => "Hi {email},\n\nThanks for joining our newsletter! We'll keep you updated.\n\nIf you don't want to receive updates, you can unsubscribe at any time. Just reply to this email and let us know!\n\nBest regards,\n{site_name}",
+        'ccf_color_label'                      => '#ffffff',
+        'ccf_color_input_bg'                   => '#1a1a1a',
+        'ccf_color_input_text'                 => '#ffffff',
+        'ccf_color_input_border'               => '#444444',
+        'ccf_color_focus_border'               => '#ffffff',
+        'ccf_color_btn_bg'                     => '#ffffff',
+        'ccf_color_btn_text'                   => '#000000',
+        'ccf_color_btn_hover_bg'               => '#cccccc',
+    );
+}
+
+// Retrieves a plugin option with automatic default fallback.
+function ccf_get_option( $option_name ) {
+    $defaults = ccf_get_default_options();
+    $default  = isset( $defaults[ $option_name ] ) ? $defaults[ $option_name ] : '';
+
+    return get_option( $option_name, $default );
+}
+
 // Helper: Parse Email Placeholders
 function ccf_parse_email_template( $template, $data ) {
     $placeholders = array(
