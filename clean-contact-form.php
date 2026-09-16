@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Clean Contact Form
  * Description: Zero-database, zero-tracking contact form with customizable CSS, anti-spam, custom email settings, blocklist, and autoresponder.
- * Version: 1.5.0
+ * Version: 1.5.1
  * Author: Chevee Dodd
  */
 
