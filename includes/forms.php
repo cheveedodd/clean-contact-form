@@ -86,7 +86,7 @@ function ccf_render_form_html() {
         }
 
         // Anti-Spam: Link in name
-        if ( ccf_get_option( 'ccf_enable_nolink' ) && ! empty( $_POST['cf_name'] ) && strpos( $_POST['cf_name'], 'http' ) !== false ) {
+        if ( ccf_get_option( 'ccf_enable_namenolink' ) && ! empty( $_POST['cf_name'] ) && strpos( $_POST['cf_name'], 'http' ) !== false ) {
             return '<div class="cf-message cf-success">' . $msg_success . '</div>';
         }
 

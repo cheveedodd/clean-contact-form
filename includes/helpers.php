@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function ccf_get_default_options() {
     return array(
         'ccf_enable_honeypot'                  => 1,
-        'ccf_enable_nolink'                    => 1,
+        'ccf_enable_namenolink'                => 1,
         'ccf_enable_timecheck'                 => 1,
         'ccf_msg_success'                      => 'Thank you! Your message has been sent.',
         'ccf_msg_error'                        => 'Please fill out all fields including a valid email address.',
