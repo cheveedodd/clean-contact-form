@@ -212,12 +212,12 @@ function ccf_render_form_html() {
 
         <div class="cf-field-group">
             <label for="cf_name">Name</label>
-            <input type="text" id="cf_name" name="cf_name" required value="' . ( isset( $_POST['cf_name'] ) ? esc_attr( $_POST['cf_name'] ) : '' ) . '">
+            <input type="text" id="cf_name" name="cf_name" maxlength="100" required value="' . ( isset( $_POST['cf_name'] ) ? esc_attr( $_POST['cf_name'] ) : '' ) . '">
         </div>
 
         <div class="cf-field-group">
             <label for="cf_email">Email</label>
-            <input type="email" id="cf_email" name="cf_email" required value="' . ( isset( $_POST['cf_email'] ) ? esc_attr( $_POST['cf_email'] ) : '' ) . '">
+            <input type="email" id="cf_email" name="cf_email" maxlength="100" required value="' . ( isset( $_POST['cf_email'] ) ? esc_attr( $_POST['cf_email'] ) : '' ) . '">
         </div>';
 
     if ( $qa_enabled ) {
