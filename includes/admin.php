@@ -26,6 +26,7 @@ function ccf_register_settings() {
     register_setting( 'ccf_options_security', 'ccf_qa_question', 'sanitize_text_field' );
     register_setting( 'ccf_options_security', 'ccf_qa_answer', 'sanitize_text_field' );
     register_setting( 'ccf_options_security', 'ccf_blocklist', 'sanitize_textarea_field' );
+    register_setting( 'ccf_options_security', 'ccf_enable_nolink', 'absint' );
 
     // Group: Messages
     register_setting( 'ccf_options_messages', 'ccf_msg_success', 'sanitize_text_field' );
@@ -184,6 +185,10 @@ function ccf_admin_page() {
                     <tr>
                         <th scope="row">Honeypot Trap</th>
                         <td><label><input type="checkbox" name="ccf_enable_honeypot" value="1" <?php checked( 1, get_option( 'ccf_enable_honeypot', $defaults['ccf_enable_honeypot'] ) ); ?> /> Enable invisible honeypot field.</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">No-Link Check</th>
+                        <td><label><input type="checkbox" name="ccf_enable_nolink" value="1" <?php checked( 1, get_option( 'ccf_enable_nolink', $defaults['ccf_enable_nolink'] ) ); ?> /> Block submissions with links in the name field.</label></td>
                     </tr>
                     <tr>
                         <th scope="row">Time Check</th>

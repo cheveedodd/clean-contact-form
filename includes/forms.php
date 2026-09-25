@@ -85,6 +85,11 @@ function ccf_render_form_html() {
             return '<div class="cf-message cf-success">' . $msg_success . '</div>';
         }
 
+        // Anti-Spam: Link in name
+        if ( ccf_get_option( 'ccf_enable_nolink' ) && ! empty( $_POST['cf_name'] ) && strpos( $_POST['cf_name'], 'http' ) !== false ) {
+            return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+        }
+
         // Anti-Spam: Time Check
         if ( ccf_get_option( 'ccf_enable_timecheck' ) ) {
             $load_time = isset( $_POST['cf_time'] ) ? intval( $_POST['cf_time'] ) : 0;
@@ -217,7 +222,7 @@ function ccf_render_form_html() {
 
         <div class="cf-field-group">
             <label for="cf_email">Email</label>
-            <input type="email" id="cf_email" name="cf_email" maxlength="100" required value="' . ( isset( $_POST['cf_email'] ) ? esc_attr( $_POST['cf_email'] ) : '' ) . '">
+            <input type="email" id="cf_email" name="cf_email" maxlength="128" required value="' . ( isset( $_POST['cf_email'] ) ? esc_attr( $_POST['cf_email'] ) : '' ) . '">
         </div>';
 
     if ( $qa_enabled ) {
