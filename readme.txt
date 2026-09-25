@@ -3,7 +3,7 @@ Contributors: cheveedodd
 Tags: contact form, newsletter, mailing list, gutenberg, spam protection
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -62,6 +62,9 @@ Emails can be routed through your configured SMTP settings or standard WordPress
 Yes, the plugin is built with hybrid block support, making it compatible with full-site editing (FSE) block themes as well as classic themes using shortcodes.
 
 == Changelog ==
+
+= 1.5.2 =
+* Added anti-spam option for discarding entries with links in the name field
 
 = 1.5.1 =
 * Added admin options for sending newsletter autoresponse

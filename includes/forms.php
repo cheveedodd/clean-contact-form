@@ -10,7 +10,7 @@ function ccf_register_block() {
         'clean-contact-form-editor-script',
         CCF_URL . 'block.js',
         array( 'wp-blocks', 'wp-element', 'wp-server-side-render', 'wp-editor' ),
-        '1.5.1'
+        '1.5.2'
     );
 
     wp_register_style(
