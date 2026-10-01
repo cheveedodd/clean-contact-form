@@ -93,7 +93,7 @@ function ccf_render_form_html() {
         // Anti-Spam: Time Check
         if ( ccf_get_option( 'ccf_enable_timecheck' ) ) {
             $load_time = isset( $_POST['cf_time'] ) ? intval( $_POST['cf_time'] ) : 0;
-            if ( ( time() - $load_time ) < 3 ) {
+            if ( ( time() - $load_time ) < ccf_get_option( 'ccf_timecheck_threshold' ) ) {
                 return '<div class="cf-message cf-success">' . $msg_success . '</div>';
             }
         }

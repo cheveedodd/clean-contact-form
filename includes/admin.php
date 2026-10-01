@@ -22,6 +22,7 @@ function ccf_register_settings() {
     // Group: Security
     register_setting( 'ccf_options_security', 'ccf_enable_honeypot', 'absint' );
     register_setting( 'ccf_options_security', 'ccf_enable_timecheck', 'absint' );
+    register_setting( 'ccf_options_security', 'ccf_timecheck_threshold', 'absint' );
     register_setting( 'ccf_options_security', 'ccf_enable_qa', 'absint' );
     register_setting( 'ccf_options_security', 'ccf_qa_question', 'sanitize_text_field' );
     register_setting( 'ccf_options_security', 'ccf_qa_answer', 'sanitize_text_field' );
@@ -192,7 +193,11 @@ function ccf_admin_page() {
                     </tr>
                     <tr>
                         <th scope="row">Time Check</th>
-                        <td><label><input type="checkbox" name="ccf_enable_timecheck" value="1" <?php checked( 1, get_option( 'ccf_enable_timecheck', $defaults['ccf_enable_timecheck'] ) ); ?> /> Block submissions in under 3 seconds.</label></td>
+                        <td><label><input type="checkbox" name="ccf_enable_timecheck" value="1" <?php checked( 1, get_option( 'ccf_enable_timecheck', $defaults['ccf_enable_timecheck'] ) ); ?> /> Block submissions in under the set threshold.</label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Time Threshold</th>
+                        <td><input type="number" name="ccf_timecheck_threshold" value="<?php echo esc_attr( get_option( 'ccf_timecheck_threshold', $defaults['ccf_timecheck_threshold'] ) ); ?>" class="small-text" /> seconds</td>
                     </tr>
                     <tr>
                         <th scope="row">Human Q&A Challenge</th>
