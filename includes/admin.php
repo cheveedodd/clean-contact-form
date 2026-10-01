@@ -140,11 +140,16 @@ function ccf_admin_page() {
                     </tr>
                 </table>
                 <hr />
-                <h3>Autoresponder Email (Submitter)</h3>
+                <h3>Contact Autoresponder Email</h3>
                 <table class="form-table">
                     <tr>
                         <th scope="row">Enable Autoresponder</th>
-                        <td><label><input type="checkbox" name="ccf_enable_autoresponder" value="1" <?php checked( 1, get_option( 'ccf_enable_autoresponder', 0 ) ); ?> /> Send confirmation email to visitor.</label></td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="ccf_enable_autoresponder" value="1" <?php checked( 1, get_option( 'ccf_enable_autoresponder', 0 ) ); ?> />
+                                Send confirmation email to contact form submitter.
+                            </label>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Subject Line</th>
@@ -156,7 +161,7 @@ function ccf_admin_page() {
                     </tr>
                 </table>
                 <hr />
-                <h3>Newsletter Autoresponder</h3>
+                <h3>Newsletter Autoresponder Email</h3>
                 <table class="form-table">
                     <tr>
                         <th scope="row">Enable Autoresponder</th>
