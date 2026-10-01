@@ -28,6 +28,9 @@ function ccf_register_settings() {
     register_setting( 'ccf_options_security', 'ccf_qa_answer', 'sanitize_text_field' );
     register_setting( 'ccf_options_security', 'ccf_blocklist', 'sanitize_textarea_field' );
     register_setting( 'ccf_options_security', 'ccf_enable_namenolink', 'absint' );
+    register_setting( 'ccf_options_security', 'ccf_enable_antispam_token', 'absint' );
+    register_setting( 'ccf_options_security', 'ccf_antispam_token_expiration', 'absint' );
+    register_setting( 'ccf_options_security', 'ccf_antispam_token_secret', 'sanitize_text_field' );
 
     // Group: Messages
     register_setting( 'ccf_options_messages', 'ccf_msg_success', 'sanitize_text_field' );
@@ -187,11 +190,45 @@ function ccf_admin_page() {
                 </table>
 
             <?php elseif ( $active_tab === 'security' ) : ?>
+                <h3>Token Based Anti-Spam</h3>
                 <table class="form-table">
                     <tr>
-                        <th scope="row">Honeypot Trap</th>
-                        <td><label><input type="checkbox" name="ccf_enable_honeypot" value="1" <?php checked( 1, get_option( 'ccf_enable_honeypot', $defaults['ccf_enable_honeypot'] ) ); ?> /> Enable invisible honeypot field.</label></td>
+                        <th scope="row">Enable Anti-Spam Token</th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="ccf_enable_antispam_token" value="1" <?php checked( 1, get_option( 'ccf_enable_antispam_token', $defaults['ccf_enable_antispam_token'] ) ); ?> />
+                                Enable hidden anti-spam token field.
+                            </label>
+                        </td>
                     </tr>
+                    <tr>
+                        <th scope="row">Token Secret</th>
+                        <td>
+                            <input type="text" name="ccf_antispam_token_secret" value="<?php echo esc_attr( get_option( 'ccf_antispam_token_secret', $defaults['ccf_antispam_token_secret'] ) ); ?>" class="regular-text" />
+                            <button type="button" id="generate-secret">Generate New Secret</button>
+                            <script type="text/javascript">
+                                jQuery(document).ready(function($) {
+                                    $('#generate-secret').on('click', function(e) {
+                                        e.preventDefault();
+                                        var newSecret = '';
+                                        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                                        for (var i = 0; i < 32; i++) {
+                                            newSecret += characters.charAt(Math.floor(Math.random() * characters.length));
+                                        }
+                                        $('input[name="ccf_antispam_token_secret"]').val(newSecret);
+                                    });
+                                });
+                            </script>
+                        </td>
+                    </tr>
+                </table>
+                <hr />
+                <h3>Other Anti-Spam Options</h3>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">Token Expiration (seconds)</th>
+                        <td><input type="number" name="ccf_antispam_token_expiration" value="<?php echo esc_attr( get_option( 'ccf_antispam_token_expiration', $defaults['ccf_antispam_token_expiration'] ) ); ?>" class="small-text" /></td>
+                    </tr>   
                     <tr>
                         <th scope="row">No-Link Check</th>
                         <td><label><input type="checkbox" name="ccf_enable_namenolink" value="1" <?php checked( 1, get_option( 'ccf_enable_namenolink', $defaults['ccf_enable_namenolink'] ) ); ?> /> Block submissions with links in the name field.</label></td>
