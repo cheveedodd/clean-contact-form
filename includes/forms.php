@@ -69,12 +69,20 @@ function ccf_mailing_list_shortcode_handler() {
     return '<div class="custom-contact-form-wrapper">' . ccf_render_mailing_list_form_html() . '</div>';
 }
 
+
+// Anti-Spam Token Field
+function ccf_render_antispam_token_field() {
+    $token = ccf_generate_antispam_token();
+    return '<input type="hidden" name="ccf_antispam_token" value="' . esc_attr( $token ) . '">';
+}
+
 // Contact Form Handler & Output
 function ccf_render_form_html() {
     $output      = '';
     $msg_success = esc_html( ccf_get_option( 'ccf_msg_success' ) );
     $msg_error   = esc_html( ccf_get_option( 'ccf_msg_error' ) );
     $defaults = ccf_get_default_options();
+    $antispam_token = ccf_get_option( 'ccf_antispam_token_secret' ) ? ccf_render_antispam_token_field() : '';
 
     $is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
@@ -119,6 +127,11 @@ function ccf_render_form_html() {
             if ( $user_answer !== $target_answer ) {
                 $output .= '<div class="cf-message cf-error">Incorrect answer to the security question. Please try again.</div>';
             }
+        }
+
+        // Anti-Spam: Antispam Token Validation
+        if ( ccf_get_option( 'ccf_enable_antispam_token' ) && ! ccf_validate_antispam_token( $_POST['ccf_antispam_token'] ) ) {
+            return '<div class="cf-message cf-error">Security check failed. Please try again.</div>';
         }
 
         // Nonce Check
@@ -210,6 +223,7 @@ function ccf_render_form_html() {
         ' . wp_nonce_field( 'ccf_form_action', 'cf_nonce', true, false ) . '
         <input type="hidden" name="cf_submitted" value="1">
         <input type="hidden" name="cf_time" value="' . time() . '">
+        ' . $antispam_token . '
 
         <div style="display:none !important; visibility:hidden !important;" aria-hidden="true">
             <input type="text" name="cf_website" tabindex="-1" autocomplete="off">
@@ -254,6 +268,7 @@ function ccf_render_mailing_list_form_html() {
     $msg_success = esc_html( ccf_get_option( 'ccf_msg_success' ) );
     $msg_error   = esc_html( ccf_get_option( 'ccf_msg_error' ) );
     $defaults = ccf_get_default_options();
+    $antispam_token = ccf_get_option( 'ccf_antispam_token_secret' ) ? ccf_render_antispam_token_field() : '';
 
     $is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
@@ -276,8 +291,13 @@ function ccf_render_mailing_list_form_html() {
             }
         }
 
-        // Nonce Verification
-        if ( ! isset( $_POST['ccf_ml_nonce'] ) || ! wp_verify_nonce( $_POST['ccf_ml_nonce'], 'ccf_ml_action' ) ) {
+        // Anti-Spam: Antispam Token Validation
+        if ( ccf_get_option( 'ccf_enable_antispam_token' ) && ! ccf_validate_antispam_token( $_POST['ccf_antispam_token'] ) ) {
+            return '<div class="cf-message cf-error">Security check failed. Please try again.</div>';
+        }
+
+        // Nonce Check
+        if ( empty( $_POST['ccf_ml_nonce'] ) || ! wp_verify_nonce( $_POST['ccf_ml_nonce'], 'ccf_ml_action' ) ) {
             return '<div class="cf-message cf-error">Security check failed. Please try again.</div>';
         }
 
@@ -337,6 +357,7 @@ function ccf_render_mailing_list_form_html() {
         ' . wp_nonce_field( 'ccf_ml_action', 'ccf_ml_nonce', true, false ) . '
         <input type="hidden" name="ccf_ml_submitted" value="1">
         <input type="hidden" name="cf_time" value="' . time() . '">
+        ' . $antispam_token . '
 
         <div style="display:none !important; visibility:hidden !important;" aria-hidden="true">
             <input type="text" name="cf_website" tabindex="-1" autocomplete="off">
