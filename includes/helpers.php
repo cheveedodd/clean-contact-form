@@ -10,6 +10,9 @@ function ccf_get_default_options() {
         'ccf_enable_namenolink'                => 1,
         'ccf_enable_timecheck'                 => 1,
         'ccf_timecheck_threshold'              => 3,
+        'ccf_enable_antispam_token'            => 1,
+        'ccf_antispam_token_expiration'        => 6000,
+        'ccf_antispam_token_secret'            => 'you-need-to-replace-this-with-a-random-secret',
         'ccf_msg_success'                      => 'Thank you! Your message has been sent.',
         'ccf_msg_error'                        => 'Please fill out all fields including a valid email address.',
         'ccf_admin_email_subject'              => '[{site_name}] New Contact Form Submission',
@@ -146,4 +149,44 @@ function ccf_handle_send_test_email() {
     } else {
         wp_send_json_error( array( 'message' => 'Failed to send test email. Check your settings or credentials.' ) );
     }
+}
+
+// Helper: Generate antispam token
+function ccf_generate_antispam_token() {
+    $timestamp = time();
+    $nonce = bin2hex( random_bytes( 16 ) );
+    $payload = $timestamp . '.' . $nonce;
+    $signature = hash_hmac( 'sha256', $payload, ccf_get_option( 'ccf_antispam_token_secret' ) );
+
+    return base64_encode( $payload . ':' . $signature );
+}
+
+// Helper: Validate antispam token
+function ccf_validate_antispam_token( $token ) {
+    if ( empty( $token ) ) {
+        return false;
+    }
+
+    $decoded = base64_decode( $token, true );
+    if (!$decoded || strpos( $decoded, ':' ) === false ) {
+        return false;
+    }
+
+    list( $payload, $signature ) = explode( ':', $decoded, 2 );
+    if ( strpos( $payload, '.' ) === false ) {
+        return false;
+    }
+
+    list( $timestamp, $nonce ) = explode( '.', $payload, 2 );
+    $expected_signature = hash_hmac( 'sha256', $payload, ccf_get_option( 'ccf_antispam_token_secret' ) );
+    if ( ! hash_equals( $expected_signature, $signature ) ) {
+        return false;
+    }
+
+    $current_time = time();
+    if ( $current_time - $timestamp > ccf_get_option( 'ccf_antispam_token_expiration' ) || $timestamp > $current_time ) {
+        return false;
+    }
+
+    return true;
 }
