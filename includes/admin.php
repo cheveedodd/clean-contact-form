@@ -202,6 +202,10 @@ function ccf_admin_page() {
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row">Token Expiration (seconds)</th>
+                        <td><input type="number" name="ccf_antispam_token_expiration" value="<?php echo esc_attr( get_option( 'ccf_antispam_token_expiration', $defaults['ccf_antispam_token_expiration'] ) ); ?>" class="small-text" /></td>
+                    </tr>  
+                    <tr>
                         <th scope="row">Token Secret</th>
                         <td>
                             <input type="text" name="ccf_antispam_token_secret" value="<?php echo esc_attr( get_option( 'ccf_antispam_token_secret', $defaults['ccf_antispam_token_secret'] ) ); ?>" class="regular-text" />
@@ -224,11 +228,7 @@ function ccf_admin_page() {
                 </table>
                 <hr />
                 <h3>Other Anti-Spam Options</h3>
-                <table class="form-table">
-                    <tr>
-                        <th scope="row">Token Expiration (seconds)</th>
-                        <td><input type="number" name="ccf_antispam_token_expiration" value="<?php echo esc_attr( get_option( 'ccf_antispam_token_expiration', $defaults['ccf_antispam_token_expiration'] ) ); ?>" class="small-text" /></td>
-                    </tr>   
+                <table class="form-table"> 
                     <tr>
                         <th scope="row">No-Link Check</th>
                         <td><label><input type="checkbox" name="ccf_enable_namenolink" value="1" <?php checked( 1, get_option( 'ccf_enable_namenolink', $defaults['ccf_enable_namenolink'] ) ); ?> /> Block submissions with links in the name field.</label></td>
