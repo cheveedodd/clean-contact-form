@@ -79,7 +79,7 @@ function ccf_mailing_list_shortcode_handler() {
 * 
 * @return string HTML output for hidden fields.
 */
-function ccf_render_hidden_fields( $nonce_action, $nonce_field, $submit_field ) {
+function ccf_render_antispam_fields( $nonce_action, $nonce_field, $submit_field ) {
     $html  = wp_nonce_field( $nonce_action, $nonce_field, true, false );
     $html .= '<input type="hidden" name="' . esc_attr( $submit_field ) . '" value="1">';
 
@@ -179,7 +179,6 @@ function ccf_render_form_html() {
     $msg_success = esc_html( ccf_get_option( 'ccf_msg_success' ) );
     $msg_error   = esc_html( ccf_get_option( 'ccf_msg_error' ) );
     $defaults = ccf_get_default_options();
-    $antispam_token = ccf_get_option( 'ccf_antispam_token_secret' ) ? ccf_render_antispam_token_field() : '';
 
     $is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
@@ -310,7 +309,6 @@ function ccf_render_mailing_list_form_html() {
     $msg_success = esc_html( ccf_get_option( 'ccf_msg_success' ) );
     $msg_error   = esc_html( ccf_get_option( 'ccf_msg_error' ) );
     $defaults = ccf_get_default_options();
-    $antispam_token = ccf_get_option( 'ccf_antispam_token_secret' ) ? ccf_render_antispam_token_field() : '';
 
     $is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
