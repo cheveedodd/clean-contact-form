@@ -268,7 +268,7 @@ function ccf_render_form_html() {
     $output .= '
     <div class="wp-block-clean-contact-form-form ccf-container">
     <form method="post" class="ccf-custom-form">
-        ' . ccf_render_antispam_fields('ccf_cf_form', 'ccf_cf_nonce', 'ccf_cf_submitted') . '
+        ' . ccf_render_antispam_fields('ccf_cf_action', 'ccf_cf_nonce', 'ccf_cf_submitted') . '
 
         <div class="ccf-field-group">
             <label for="ccf_name">Name</label>
