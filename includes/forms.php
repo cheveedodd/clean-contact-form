@@ -61,20 +61,37 @@ function ccf_enqueue_custom_css() {
 // Shortcode Handlers
 add_shortcode( 'clean_contact_form', 'ccf_shortcode_handler' );
 function ccf_shortcode_handler() {
-    return '<div class="custom-contact-form-wrapper">' . ccf_render_form_html() . '</div>';
+    return '<div class="ccf-custom-form-wrapper">' . ccf_render_form_html() . '</div>';
 }
 
 add_shortcode( 'clean_mailing_list', 'ccf_mailing_list_shortcode_handler' );
 function ccf_mailing_list_shortcode_handler() {
-    return '<div class="custom-contact-form-wrapper">' . ccf_render_mailing_list_form_html() . '</div>';
+    return '<div class="ccf-custom-form-wrapper">' . ccf_render_mailing_list_form_html() . '</div>';
 }
 
 
-// Anti-Spam Token Field
-function ccf_render_antispam_token_field() {
-    $token = ccf_generate_antispam_token();
-    return '<input type="hidden" name="ccf_antispam_token" value="' . esc_attr( $token ) . '">';
+// Helper: Render Hidden Fields for Form Submission
+function ccf_render_hidden_fields( $nonce_action, $nonce_field, $submit_field ) {
+    $html  = wp_nonce_field( $nonce_action, $nonce_field, true, false );
+    $html .= '<input type="hidden" name="' . esc_attr( $submit_field ) . '" value="1">';
+
+    if ( ccf_get_option( 'ccf_enable_timecheck' ) ) {
+        $html .= '<input type="hidden" name="ccf_time" value="' . time() . '">';
+    }
+
+    if ( ccf_get_option( 'ccf_enable_antispam_token' ) ) {
+        $html .= '<input type="hidden" name="ccf_antispam_token" value="' . esc_attr( ccf_generate_antispam_token() ) . '">';
+    }
+
+    if ( ccf_get_option( 'ccf_enable_honeypot' ) ) {
+        $html .= '<div style="display:none !important; visibility:hidden !important;" aria-hidden="true">';
+        $html .= '    <input type="text" name="ccf_website" tabindex="-1" autocomplete="off">';
+        $html .= '</div>';
+    }
+
+    return $html;
 }
+
 
 // Contact Form Handler & Output
 function ccf_render_form_html() {
@@ -86,23 +103,23 @@ function ccf_render_form_html() {
 
     $is_rest_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
-    if ( ! $is_rest_request && isset( $_POST['cf_submitted'] ) ) {
+    if ( ! $is_rest_request && isset( $_POST['ccf_cf_submitted'] ) ) {
         
         // Anti-Spam: Honeypot
-        if ( ccf_get_option( 'ccf_enable_honeypot' ) && ! empty( $_POST['cf_website'] ) ) {
-            return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+        if ( ccf_get_option( 'ccf_enable_honeypot' ) && ! empty( $_POST['ccf_website'] ) ) {
+            return '<div class="ccf-message ccf-success">' . $msg_success . '</div>';
         }
 
         // Anti-Spam: Link in name
-        if ( ccf_get_option( 'ccf_enable_namenolink' ) && ! empty( $_POST['cf_name'] ) && strpos( $_POST['cf_name'], 'http' ) !== false ) {
-            return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+        if ( ccf_get_option( 'ccf_enable_namenolink' ) && ! empty( $_POST['ccf_name'] ) && strpos( $_POST['ccf_name'], 'http' ) !== false ) {
+            return '<div class="ccf-message ccf-success">' . $msg_success . '</div>';
         }
 
         // Anti-Spam: Time Check
         if ( ccf_get_option( 'ccf_enable_timecheck' ) ) {
-            $load_time = isset( $_POST['cf_time'] ) ? intval( $_POST['cf_time'] ) : 0;
+            $load_time = isset( $_POST['ccf_time'] ) ? intval( $_POST['ccf_time'] ) : 0;
             if ( ( time() - $load_time ) < ccf_get_option( 'ccf_timecheck_threshold' ) ) {
-                return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+                return '<div class="ccf-message ccf-success">' . $msg_success . '</div>';
             }
         }
 
@@ -111,42 +128,42 @@ function ccf_render_form_html() {
         if ( ! empty( $blocklist ) ) {
             $blocked_words   = array_map( 'trim', explode( ',', strtolower( $blocklist ) ) );
             $submission_text = strtolower(
-                ( $_POST['cf_name'] ?? '' ) . ' ' . ( $_POST['cf_email'] ?? '' ) . ' ' . ( $_POST['cf_message'] ?? '' )
+                ( $_POST['ccf_name'] ?? '' ) . ' ' . ( $_POST['ccf_email'] ?? '' ) . ' ' . ( $_POST['ccf_message'] ?? '' )
             );
             foreach ( $blocked_words as $word ) {
                 if ( ! empty( $word ) && strpos( $submission_text, $word ) !== false ) {
-                    return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+                    return '<div class="ccf-message ccf-success">' . $msg_success . '</div>';
                 }
             }
         }
 
         // Anti-Spam: Q&A
         if ( get_option( 'ccf_enable_qa', 0 ) ) {
-            $user_answer   = strtolower( trim( $_POST['cf_qa_response'] ?? '' ) );
+            $user_answer   = strtolower( trim( $_POST['ccf_qa_response'] ?? '' ) );
             $target_answer = strtolower( trim( get_option( 'ccf_qa_answer', '' ) ) );
             if ( $user_answer !== $target_answer ) {
-                $output .= '<div class="cf-message cf-error">Incorrect answer to the security question. Please try again.</div>';
+                $output .= '<div class="ccf-message ccf-error">Incorrect answer to the security question. Please try again.</div>';
             }
         }
 
         // Anti-Spam: Antispam Token Validation
         if ( ccf_get_option( 'ccf_enable_antispam_token' ) && ! ccf_validate_antispam_token( $_POST['ccf_antispam_token'] ) ) {
-            return '<div class="cf-message cf-error">Security check failed. Please try again.</div>';
+            return '<div class="ccf-message ccf-error">Security check failed. Please try again.</div>';
         }
 
         // Nonce Check
-        if ( empty( $output ) && ( ! isset( $_POST['cf_nonce'] ) || ! wp_verify_nonce( $_POST['cf_nonce'], 'ccf_form_action' ) ) ) {
-            return '<div class="cf-message cf-error">Security check failed. Please try again.</div>';
+        if ( empty( $output ) && ( ! isset( $_POST['ccf_nonce'] ) || ! wp_verify_nonce( $_POST['ccf_nonce'], 'ccf_form_action' ) ) ) {
+            return '<div class="ccf-message ccf-error">Security check failed. Please try again.</div>';
         }
 
         // Processing Submission
         if ( empty( $output ) ) {
-            $name    = sanitize_text_field( $_POST['cf_name'] ?? '' );
-            $email   = sanitize_email( $_POST['cf_email'] ?? '' );
-            $message = sanitize_textarea_field( $_POST['cf_message'] ?? '' );
+            $name    = sanitize_text_field( $_POST['ccf_name'] ?? '' );
+            $email   = sanitize_email( $_POST['ccf_email'] ?? '' );
+            $message = sanitize_textarea_field( $_POST['ccf_message'] ?? '' );
 
             if ( empty( $name ) || empty( $email ) || empty( $message ) || ! is_email( $email ) ) {
-                $output .= '<div class="cf-message cf-error">' . $msg_error . '</div>';
+                $output .= '<div class="ccf-message ccf-error">' . $msg_error . '</div>';
             } else {
                 $configured_email = sanitize_email( get_option( 'ccf_recipient_email' ) );
                 $to               = ! empty( $configured_email ) ? $configured_email : get_option( 'admin_email' );
@@ -205,9 +222,9 @@ function ccf_render_form_html() {
                         }
                     }
 
-                    return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+                    return '<div class="ccf-message ccf-success">' . $msg_success . '</div>';
                 } else {
-                    return '<div class="cf-message cf-error">Mail delivery failed. Please try again later.</div>';
+                    return '<div class="ccf-message ccf-error">Mail delivery failed. Please try again later.</div>';
                 }
             }
         }
@@ -219,42 +236,42 @@ function ccf_render_form_html() {
 
     $output .= '
     <div class="wp-block-clean-contact-form-form ccf-container">
-    <form method="post" class="custom-contact-form">
-        ' . wp_nonce_field( 'ccf_form_action', 'cf_nonce', true, false ) . '
-        <input type="hidden" name="cf_submitted" value="1">
-        <input type="hidden" name="cf_time" value="' . time() . '">
+    <form method="post" class="ccf-custom-form">
+        ' . wp_nonce_field( 'ccf_form_action', 'ccf_nonce', true, false ) . '
+        <input type="hidden" name="ccf_cf_submitted" value="1">
+        <input type="hidden" name="ccf_time" value="' . time() . '">
         ' . $antispam_token . '
 
         <div style="display:none !important; visibility:hidden !important;" aria-hidden="true">
-            <input type="text" name="cf_website" tabindex="-1" autocomplete="off">
+            <input type="text" name="ccf_website" tabindex="-1" autocomplete="off">
         </div>
 
-        <div class="cf-field-group">
-            <label for="cf_name">Name</label>
-            <input type="text" id="cf_name" name="cf_name" maxlength="100" required value="' . ( isset( $_POST['cf_name'] ) ? esc_attr( $_POST['cf_name'] ) : '' ) . '">
+        <div class="ccf-field-group">
+            <label for="ccf_name">Name</label>
+            <input type="text" id="ccf_name" name="ccf_name" maxlength="100" required value="' . ( isset( $_POST['ccf_name'] ) ? esc_attr( $_POST['ccf_name'] ) : '' ) . '">
         </div>
 
-        <div class="cf-field-group">
-            <label for="cf_email">Email</label>
-            <input type="email" id="cf_email" name="cf_email" maxlength="128" required value="' . ( isset( $_POST['cf_email'] ) ? esc_attr( $_POST['cf_email'] ) : '' ) . '">
+        <div class="ccf-field-group">
+            <label for="ccf_email">Email</label>
+            <input type="email" id="ccf_email" name="ccf_email" maxlength="128" required value="' . ( isset( $_POST['ccf_email'] ) ? esc_attr( $_POST['ccf_email'] ) : '' ) . '">
         </div>';
 
     if ( $qa_enabled ) {
         $output .= '
-        <div class="cf-field-group">
-            <label for="cf_qa_response">' . esc_html( $qa_question ) . '</label>
-            <input type="text" id="cf_qa_response" name="cf_qa_response" required autocomplete="off">
+        <div class="ccf-field-group">
+            <label for="ccf_qa_response">' . esc_html( $qa_question ) . '</label>
+            <input type="text" id="ccf_qa_response" name="ccf_qa_response" required autocomplete="off">
         </div>';
     }
 
     $output .= '
-        <div class="cf-field-group">
-            <label for="cf_message">Message</label>
-            <textarea id="cf_message" name="cf_message" rows="5" required>' . ( isset( $_POST['cf_message'] ) ? esc_textarea( $_POST['cf_message'] ) : '' ) . '</textarea>
+        <div class="ccf-field-group">
+            <label for="ccf_message">Message</label>
+            <textarea id="ccf_message" name="ccf_message" rows="5" required>' . ( isset( $_POST['ccf_message'] ) ? esc_textarea( $_POST['ccf_message'] ) : '' ) . '</textarea>
         </div>
 
-        <div class="cf-submit-group">
-            <input type="submit" name="cf_submit_button" value="Send Message">
+        <div class="ccf-submit-group">
+            <input type="submit" name="ccf_submit_button" value="Send Message">
         </div>
     </form>
     </div>';
@@ -275,9 +292,9 @@ function ccf_render_mailing_list_form_html() {
     if ( ! $is_rest_request && isset( $_POST['ccf_ml_submitted'] ) ) {
         
         // Anti-Spam: Honeypot & Timecheck
-        if ( ( ccf_get_option( 'ccf_enable_honeypot' ) && ! empty( $_POST['cf_website'] ) ) ||
-             ( ccf_get_option( 'ccf_enable_timecheck' ) && ( time() - intval( $_POST['cf_time'] ?? 0 ) ) < 3 ) ) {
-            return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+        if ( ( ccf_get_option( 'ccf_enable_honeypot' ) && ! empty( $_POST['ccf_website'] ) ) ||
+             ( ccf_get_option( 'ccf_enable_timecheck' ) && ( time() - intval( $_POST['ccf_time'] ?? 0 ) ) < 3 ) ) {
+            return '<div class="ccf-message ccf-success">' . $msg_success . '</div>';
         }
 
         // Anti-Spam: Blocklist
@@ -286,23 +303,23 @@ function ccf_render_mailing_list_form_html() {
         if ( ! empty( $blocklist ) ) {
             foreach ( array_map( 'trim', explode( ',', strtolower( $blocklist ) ) ) as $word ) {
                 if ( ! empty( $word ) && strpos( strtolower( $email ), $word ) !== false ) {
-                    return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+                    return '<div class="ccf-message ccf-success">' . $msg_success . '</div>';
                 }
             }
         }
 
         // Anti-Spam: Antispam Token Validation
         if ( ccf_get_option( 'ccf_enable_antispam_token' ) && ! ccf_validate_antispam_token( $_POST['ccf_antispam_token'] ) ) {
-            return '<div class="cf-message cf-error">Security check failed. Please try again.</div>';
+            return '<div class="ccf-message ccf-error">Security check failed. Please try again.</div>';
         }
 
         // Nonce Check
         if ( empty( $_POST['ccf_ml_nonce'] ) || ! wp_verify_nonce( $_POST['ccf_ml_nonce'], 'ccf_ml_action' ) ) {
-            return '<div class="cf-message cf-error">Security check failed. Please try again.</div>';
+            return '<div class="ccf-message ccf-error">Security check failed. Please try again.</div>';
         }
 
         if ( empty( $email ) || ! is_email( $email ) ) {
-            $output .= '<div class="cf-message cf-error">' . $msg_error . '</div>';
+            $output .= '<div class="ccf-message -error">' . $msg_error . '</div>';
         } else {
             $configured_email = sanitize_email( get_option( 'ccf_recipient_email' ) );
             $to               = ! empty( $configured_email ) ? $configured_email : get_option( 'admin_email' );
@@ -344,31 +361,31 @@ function ccf_render_mailing_list_form_html() {
                     'ccf_send_deferred_autoresponder',
                     array( $email, $auto_mail['subject'], $auto_mail['body'], array( 'Content-Type: text/plain; charset=UTF-8', 'From: ' . $site_from ) )
                 );
-                return '<div class="cf-message cf-success">' . $msg_success . '</div>';
+                return '<div class="ccf-message ccf-success">' . $msg_success . '</div>';
             } else {
-                return '<div class="cf-message cf-error">Subscription failed. Please try again later.</div>';
+                return '<div class="ccf-message ccf-error">Subscription failed. Please try again later.</div>';
             }
         }
     }
 
     $output .= '
     <div class="wp-block-clean-contact-form-form ccf-container ccf-mailing-list-container">
-    <form method="post" class="custom-contact-form ccf-mailing-list-form">
+    <form method="post" class="ccf-custom-form ccf-mailing-list-form">
         ' . wp_nonce_field( 'ccf_ml_action', 'ccf_ml_nonce', true, false ) . '
         <input type="hidden" name="ccf_ml_submitted" value="1">
-        <input type="hidden" name="cf_time" value="' . time() . '">
+        <input type="hidden" name="ccf_time" value="' . time() . '">
         ' . $antispam_token . '
 
         <div style="display:none !important; visibility:hidden !important;" aria-hidden="true">
-            <input type="text" name="cf_website" tabindex="-1" autocomplete="off">
+            <input type="text" name="ccf_website" tabindex="-1" autocomplete="off">
         </div>
 
-        <div class="cf-field-group">
+        <div class="ccf-field-group">
             <label for="ccf_ml_email">Email Address</label>
             <input type="email" id="ccf_ml_email" name="ccf_ml_email" required value="' . ( isset( $_POST['ccf_ml_email'] ) ? esc_attr( $_POST['ccf_ml_email'] ) : '' ) . '" placeholder="your@email.com">
         </div>
 
-        <div class="cf-submit-group">
+        <div class="ccf-submit-group">
             <input type="submit" name="ccf_ml_submit" value="Subscribe">
         </div>
     </form>

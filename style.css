@@ -11,7 +11,7 @@
 }
 
 /* Container Spacing & Alignment */
-.custom-contact-form {
+.ccf-custom-form {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
@@ -19,12 +19,12 @@
     margin: 0 auto;
 }
 
-.custom-contact-form p {
+.ccf-custom-form p {
     margin: 0;
 }
 
 /* High-Contrast Visible Labels */
-.custom-contact-form label {
+.ccf-custom-form label {
     display: block;
     color: var(--ccf-label-color) !important;
     text-transform: uppercase;
@@ -32,9 +32,9 @@
 }
 
 /* Input Fields */
-.custom-contact-form input[type="text"],
-.custom-contact-form input[type="email"],
-.custom-contact-form textarea {
+.ccf-custom-form input[type="text"],
+.ccf-custom-form input[type="email"],
+.ccf-custom-form textarea {
     width: 100% !important;
     box-sizing: border-box;
     background-color: var(--ccf-input-bg) !important;
@@ -48,16 +48,16 @@
 }
 
 /* Input Focus States */
-.custom-contact-form input[type="text"]:focus,
-.custom-contact-form input[type="email"]:focus,
-.custom-contact-form textarea:focus {
+.ccf-custom-form input[type="text"]:focus,
+.ccf-custom-form input[type="email"]:focus,
+.ccf-custom-form textarea:focus {
     outline: none !important;
     border-color: var(--ccf-focus-border) !important;
     box-shadow: 0 0 0 1px var(--ccf-focus-border);
 }
 
 /* Styled Submit Button */
-.custom-contact-form input[type="submit"] {
+.ccf-custom-form input[type="submit"] {
     background-color: var(--ccf-btn-bg) !important;
     color: var(--ccf-btn-text) !important;
     border: none !important;
@@ -71,26 +71,26 @@
     margin-left: auto;
 }
 
-.custom-contact-form input[type="submit"]:hover {
+.ccf-custom-form input[type="submit"]:hover {
     background-color: var(--ccf-btn-hover-bg) !important;
     color: var(--ccf-btn-text) !important;
 }
 
 /* Group wrapper spacing */
-.cf-field-group {
+.ccf-field-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
 /* Align submit button right */
-.cf-submit-group {
+.ccf-submit-group {
     display: flex;
     justify-content: flex-end;
 }
 
 /* Base Alert Banner Layout */
-.cf-message {
+.ccf-message {
     max-width: 600px;
     margin: 0 auto 1.5rem auto;
     padding: 1rem 1.25rem;
@@ -105,7 +105,7 @@
 }
 
 /* Success Banner */
-.cf-message.cf-success {
+.ccf-message.ccf-success {
     background-color: #1a1a1a;
     color: #ffffff;
     border: 1px solid #22c55e;
@@ -113,7 +113,7 @@
 }
 
 /* Error Banner */
-.cf-message.cf-error {
+.ccf-message.ccf-error {
     background-color: #1a1a1a;
     color: #ffffff;
     border: 1px solid #ef4444;
