@@ -231,11 +231,21 @@ function ccf_admin_page() {
                 <table class="form-table"> 
                     <tr>
                         <th scope="row">No-Link Check</th>
-                        <td><label><input type="checkbox" name="ccf_enable_namenolink" value="1" <?php checked( 1, get_option( 'ccf_enable_namenolink', $defaults['ccf_enable_namenolink'] ) ); ?> /> Block submissions with links in the name field.</label></td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="ccf_enable_namenolink" value="1" <?php checked( 1, get_option( 'ccf_enable_namenolink', $defaults['ccf_enable_namenolink'] ) ); ?> /> 
+                                Block submissions with links in the name field.
+                            </label>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Time Check</th>
-                        <td><label><input type="checkbox" name="ccf_enable_timecheck" value="1" <?php checked( 1, get_option( 'ccf_enable_timecheck', $defaults['ccf_enable_timecheck'] ) ); ?> /> Block submissions in under the set threshold.</label></td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="ccf_enable_timecheck" value="1" <?php checked( 1, get_option( 'ccf_enable_timecheck', $defaults['ccf_enable_timecheck'] ) ); ?> /> 
+                                Block submissions in under the set threshold.
+                            </label>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Time Threshold</th>
@@ -243,7 +253,12 @@ function ccf_admin_page() {
                     </tr>
                     <tr>
                         <th scope="row">Human Q&A Challenge</th>
-                        <td><label><input type="checkbox" name="ccf_enable_qa" value="1" <?php checked( 1, get_option( 'ccf_enable_qa', $defaults['ccf_enable_qa'] ) ); ?> /> Require custom question answer.</label></td>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="ccf_enable_qa" value="1" <?php checked( 1, get_option( 'ccf_enable_qa', $defaults['ccf_enable_qa'] ) ); ?> />
+                                Require custom question answer. Only applies to the contact form, not newsletter subscriptions.
+                            </label>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Question & Answer</th>
