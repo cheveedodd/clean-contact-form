@@ -33,9 +33,14 @@ function ccf_get_default_options() {
 }
 
 // Retrieves a plugin option with automatic default fallback.
-function ccf_get_option( $option_name ) {
+function ccf_get_option( $option_name, $fallback = null) {
     $defaults = ccf_get_default_options();
-    $default  = isset( $defaults[ $option_name ] ) ? $defaults[ $option_name ] : '';
+
+    if ( isset( $defaults[ $option_name ] ) ) {
+        $default = $defaults[ $option_name ];
+    } else {
+        $default = $fallback ?? '';
+    }
 
     return get_option( $option_name, $default );
 }
