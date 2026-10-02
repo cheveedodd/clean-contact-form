@@ -323,7 +323,7 @@ function ccf_render_mailing_list_form_html() {
         // Processing Submission
         $email   = sanitize_email( $_POST['ccf_ml_email'] ?? '' );
         if ( empty( $email ) || ! is_email( $email ) ) {
-            $output .= '<div class="ccf-message -error">' . $msg_error . '</div>';
+            $output .= '<div class="ccf-message ccf-error">' . $msg_error . '</div>';
         } else {
             $configured_email = sanitize_email( get_option( 'ccf_recipient_email' ) );
             $to               = ! empty( $configured_email ) ? $configured_email : get_option( 'admin_email' );
