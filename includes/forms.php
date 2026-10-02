@@ -231,9 +231,6 @@ function ccf_render_form_html() {
     }
 
     // HTML Form Output
-    $qa_enabled  = get_option( 'ccf_enable_qa', 0 );
-    $qa_question = get_option( 'ccf_qa_question', 'What is 2 + 2?' );
-
     $output .= '
     <div class="wp-block-clean-contact-form-form ccf-container">
     <form method="post" class="ccf-custom-form">
@@ -249,10 +246,10 @@ function ccf_render_form_html() {
             <input type="email" id="ccf_email" name="ccf_email" maxlength="128" required value="' . ( isset( $_POST['ccf_email'] ) ? esc_attr( $_POST['ccf_email'] ) : '' ) . '">
         </div>';
 
-    if ( $qa_enabled ) {
+    if ( ccf_get_option( 'ccf_enable_qa' ) ) {
         $output .= '
         <div class="ccf-field-group">
-            <label for="ccf_qa_response">' . esc_html( $qa_question ) . '</label>
+            <label for="ccf_qa_response">' . esc_html( ccf_get_option( 'ccf_qa_question' ) ) . '</label>
             <input type="text" id="ccf_qa_response" name="ccf_qa_response" required autocomplete="off">
         </div>';
     }
