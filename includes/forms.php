@@ -152,7 +152,7 @@ function ccf_render_form_html() {
         }
 
         // Nonce Check
-        if ( empty( $output ) && ( ! isset( $_POST['ccf_nonce'] ) || ! wp_verify_nonce( $_POST['ccf_nonce'], 'ccf_form_action' ) ) ) {
+        if ( empty( $output ) && ( ! isset( $_POST['ccf_cf_nonce'] ) || ! wp_verify_nonce( $_POST['ccf_cf_nonce'], 'ccf_cf_form' ) ) ) {
             return '<div class="ccf-message ccf-error">Security check failed. Please try again.</div>';
         }
 
@@ -237,7 +237,7 @@ function ccf_render_form_html() {
     $output .= '
     <div class="wp-block-clean-contact-form-form ccf-container">
     <form method="post" class="ccf-custom-form">
-        ' . ccf_render_antispam_fields('ccf_form_action', 'ccf_nonce', 'ccf_cf_submitted') . '
+        ' . ccf_render_antispam_fields('ccf_cf_form', 'ccf_cf_nonce', 'ccf_cf_submitted') . '
 
         <div class="ccf-field-group">
             <label for="ccf_name">Name</label>
