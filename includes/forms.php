@@ -107,10 +107,11 @@ function ccf_render_antispam_fields( $nonce_action, $nonce_field, $submit_field 
  * @param string $nonce_action The action name for nonce verification.
  * @param string $nonce_field The name of the nonce field in the form.
  * @param array $check_text_fields An array of field names to check against the blocklist.
+ * @param bool $has_qa Whether the form includes a Q&A field for validation.
  * 
  * @return true|string Returns true if validation passes, or an error message string if validation fails.
  */
-function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $check_text_fields = []) {
+function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $check_text_fields = [], $has_qa = false ) {
     $success_message = '<div class="ccf-message ccf-success">' . esc_html( ccf_get_option( 'ccf_msg_success' ) ) . '</div>';
 
     // Anti-Spam: Honeypot
@@ -151,7 +152,7 @@ function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $ch
     }
 
     // Anti-Spam: Q&A
-    if ( ccf_get_option( 'ccf_enable_qa' ) &&  isset( $post_data['ccf_qa_response'] ) ) {
+    if ( ccf_get_option( 'ccf_enable_qa' ) && $has_qa ) {
         $user_answer   = strtolower( trim( $post_data['ccf_qa_response'] ?? '' ) );
         $target_answer = strtolower( trim( ccf_get_option( 'ccf_qa_answer' ) ) );
         if ( $user_answer !== $target_answer ) {
@@ -185,7 +186,7 @@ function ccf_render_form_html() {
     if ( ! $is_rest_request && isset( $_POST['ccf_cf_submitted'] ) ) {
         
         // Anti-Spam & Nonce Validation
-        $antispam_check = ccf_check_antispam_fields( $_POST, 'ccf_cf_action', 'ccf_cf_nonce', ['ccf_name', 'ccf_email', 'ccf_message'] );
+        $antispam_check = ccf_check_antispam_fields( $_POST, 'ccf_cf_action', 'ccf_cf_nonce', ['ccf_name', 'ccf_email', 'ccf_message'], true );
         if ( $antispam_check !== true ) {
             return $antispam_check; // Return the error message or success message from the anti-spam check
         }
