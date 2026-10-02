@@ -315,7 +315,7 @@ function ccf_render_mailing_list_form_html() {
     if ( ! $is_rest_request && isset( $_POST['ccf_ml_submitted'] ) ) {
         
         // Anti-Spam & Nonce Validation
-        $antispam_check = ccf_check_antispam_fields( $_POST, 'ccf_ml_action', 'ccf_ml_nonce', ['ccf_email'] );
+        $antispam_check = ccf_check_antispam_fields( $_POST, 'ccf_ml_action', 'ccf_ml_nonce', ['ccf_ml_email'] );
         if ( $antispam_check !== true ) {
             return $antispam_check; // Return the error message or success message from the anti-spam check
         }    
