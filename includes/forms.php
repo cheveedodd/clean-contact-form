@@ -320,7 +320,8 @@ function ccf_render_mailing_list_form_html() {
             return $antispam_check; // Return the error message or success message from the anti-spam check
         }    
 
-
+        // Processing Submission
+        $email   = sanitize_email( $_POST['ccf_ml_email'] ?? '' );
         if ( empty( $email ) || ! is_email( $email ) ) {
             $output .= '<div class="ccf-message -error">' . $msg_error . '</div>';
         } else {
