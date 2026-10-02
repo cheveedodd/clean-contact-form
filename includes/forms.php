@@ -160,7 +160,7 @@ function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $ch
     }
 
     // Anti-Spam: Antispam Token Validation
-    if ( ccf_get_option( 'ccf_enable_antispam_token' ) && ! ccf_validate_antispam_token( $post_data['ccf_antispam_token'] ) ) {
+    if ( ccf_get_option( 'ccf_enable_antispam_token' ) && ! ccf_validate_antispam_token( $post_data['ccf_antispam_token'] ?? '' ) ) {
         return '<div class="ccf-message ccf-error">Security check failed. Please try again.</div>';
     }
 
