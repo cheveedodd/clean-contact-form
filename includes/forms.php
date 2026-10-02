@@ -237,14 +237,7 @@ function ccf_render_form_html() {
     $output .= '
     <div class="wp-block-clean-contact-form-form ccf-container">
     <form method="post" class="ccf-custom-form">
-        ' . wp_nonce_field( 'ccf_form_action', 'ccf_nonce', true, false ) . '
-        <input type="hidden" name="ccf_cf_submitted" value="1">
-        <input type="hidden" name="ccf_time" value="' . time() . '">
-        ' . $antispam_token . '
-
-        <div style="display:none !important; visibility:hidden !important;" aria-hidden="true">
-            <input type="text" name="ccf_website" tabindex="-1" autocomplete="off">
-        </div>
+        ' . ccf_render_antispam_fields('ccf_form_action', 'ccf_nonce', 'ccf_cf_submitted') . '
 
         <div class="ccf-field-group">
             <label for="ccf_name">Name</label>
@@ -371,14 +364,7 @@ function ccf_render_mailing_list_form_html() {
     $output .= '
     <div class="wp-block-clean-contact-form-form ccf-container ccf-mailing-list-container">
     <form method="post" class="ccf-custom-form ccf-mailing-list-form">
-        ' . wp_nonce_field( 'ccf_ml_action', 'ccf_ml_nonce', true, false ) . '
-        <input type="hidden" name="ccf_ml_submitted" value="1">
-        <input type="hidden" name="ccf_time" value="' . time() . '">
-        ' . $antispam_token . '
-
-        <div style="display:none !important; visibility:hidden !important;" aria-hidden="true">
-            <input type="text" name="ccf_website" tabindex="-1" autocomplete="off">
-        </div>
+        ' . ccf_render_antispam_fields('ccf_ml_action', 'ccf_ml_nonce', 'ccf_ml_submitted') . '
 
         <div class="ccf-field-group">
             <label for="ccf_ml_email">Email Address</label>
