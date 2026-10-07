@@ -123,6 +123,7 @@ function ccf_admin_page() {
             <a href="?page=clean-contact-form&tab=messages" class="nav-tab <?php echo $active_tab === 'messages' ? 'nav-tab-active' : ''; ?>">Messages</a>
             <a href="?page=clean-contact-form&tab=styling" class="nav-tab <?php echo $active_tab === 'styling' ? 'nav-tab-active' : ''; ?>">Custom CSS</a>
             <a href="?page=clean-contact-form&tab=smtp" class="nav-tab <?php echo $active_tab === 'smtp' ? 'nav-tab-active' : ''; ?>">SMTP Settings</a>
+            <a href="?page=clean-contact-form&tab=logs" class="nav-tab <?php echo $active_tab === 'logs' ? 'nav-tab-active' : ''; ?>">Logs</a>
         </h2>
 
         <?php if ( $active_tab === 'logs' ) : ?>
@@ -142,7 +143,7 @@ function ccf_admin_page() {
                 <input type="submit" name="ccf_clear_log" class="button button-secondary" value="Clear Log" onclick="return confirm('Are you sure you want to clear the log file?');" />
             </form>
 
-            <textarea readonly class="large-text code" rows="18" style="white-space: pre; font-family: monospace; font-size: 12px; resize: vertical;"><?php echo esc_textarea( $log_content ?? 'Empty.' ); ?></textarea>
+            <textarea readonly class="large-text code" rows="18" style="white-space: pre; font-family: monospace; font-size: 12px; resize: vertical;"><?php echo esc_textarea( ! empty( $log_content ) ? $log_content : 'Empty.' ); ?></textarea>
 
         <?php else : ?>
 
