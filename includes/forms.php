@@ -116,7 +116,7 @@ function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $ch
 
     // Anti-Spam: Honeypot
     if ( ccf_get_option( 'ccf_enable_honeypot' ) && ! empty( $post_data['ccf_website'] ) ) {
-        ccf_log_rejection( 'honeypot', 'Honeypot field filled' . $post_data['ccf_website'] );
+        ccf_log_rejection( 'honeypot', 'Honeypot field filled - ' . $post_data['ccf_website'] );
         return $success_message;
     }
 
