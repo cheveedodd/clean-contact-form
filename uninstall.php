@@ -21,14 +21,21 @@ $ccf_options = array(
     'ccf_admin_email_body',
     'ccf_autoresponder_subject',
     'ccf_autoresponder_body',
+    'ccf_newsletter_autoresponder_subject',
+    'ccf_newsletter_autoresponder_body',
 
     // Security & Anti-Spam
     'ccf_enable_honeypot',
     'ccf_enable_timecheck',
+    'ccf_timecheck_threshold',
     'ccf_enable_qa',
     'ccf_qa_question',
     'ccf_qa_answer',
     'ccf_blocklist',
+    'ccf_enable_namenolink',
+    'ccf_enable_antispam_token',
+    'ccf_antispam_token_expiration',
+    'ccf_antispam_token_secret',
 
     // Messages & Redirects
     'ccf_msg_success',
@@ -61,4 +68,23 @@ $ccf_options = array(
 foreach ( $ccf_options as $option_name ) {
     delete_option( $option_name );
     delete_site_option( $option_name );
+}
+
+// Delete any scheduled events related to the plugin
+wp_clear_scheduled_hook( 'ccf_send_deferred_autoresponder' );
+
+// Delete log file if it exists
+$upload_dir = wp_upload_dir();
+$log_dir    = trailingslashit( $upload_dir['basedir'] ) . 'ccf-logs';
+
+if ( is_dir( $log_dir ) ) {
+    $files = glob( $log_dir . '/*', GLOB_MARK );
+    if ( is_array( $files ) ) {
+        foreach ( $files as $file ) {
+            if ( is_file( $file ) ) {
+                unlink( $file );
+            }
+        }
+    }
+    rmdir( $log_dir );
 }
