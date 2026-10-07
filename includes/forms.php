@@ -205,13 +205,13 @@ function ccf_render_form_html() {
             if ( empty( $name ) || empty( $email ) || empty( $message ) || ! is_email( $email ) ) {
                 $output .= '<div class="ccf-message ccf-error">' . $msg_error . '</div>';
             } else {
-                $configured_email = sanitize_email( get_option( 'ccf_recipient_email' ) );
+                $configured_email = sanitize_email( ccf_get_option( 'ccf_recipient_email', '' ) );
                 $to               = ! empty( $configured_email ) ? $configured_email : get_option( 'admin_email' );
                 $site_from        = ccf_get_from_address();
 
                 $headers   = array( 'Content-Type: text/plain; charset=UTF-8' );
                 $headers[] = 'Reply-To: ' . $name . ' <' . $email . '>';
-                $headers[] = 'From: ' . ( get_option( 'ccf_disable_reply_to', 0 ) ? $site_from : $name . ' <' . $email . '>' );
+                $headers[] = 'From: ' . ( ccf_get_option( 'ccf_disable_reply_to', 0 ) ? $site_from : $name . ' <' . $email . '>' );
 
                 $template_data = array(
                     'name'    => $name,
@@ -233,7 +233,7 @@ function ccf_render_form_html() {
 
                 if ( $sent ) {
                     // Deferred Autoresponder
-                    if ( get_option( 'ccf_enable_autoresponder', 0 ) ) {
+                    if ( ccf_get_option( 'ccf_enable_autoresponder', 0 ) ) {
                         $auto_mail = ccf_get_parsed_email(
                             'ccf_autoresponder_subject',
                             $defaults['ccf_autoresponder_subject'],
@@ -250,7 +250,7 @@ function ccf_render_form_html() {
                     }
 
                     // Redirect handling
-                    $redirect_page_id = get_option( 'ccf_redirect_page_id', 0 );
+                    $redirect_page_id = ccf_get_option( 'ccf_redirect_page_id', 0 );
                     $redirect_target  = ! empty( $redirect_page_id ) ? get_permalink( $redirect_page_id ) : esc_url_raw( get_option( 'ccf_redirect_url', '' ) );
 
                     if ( ! empty( $redirect_target ) ) {
@@ -331,13 +331,13 @@ function ccf_render_mailing_list_form_html() {
         if ( empty( $email ) || ! is_email( $email ) ) {
             $output .= '<div class="ccf-message ccf-error">' . $msg_error . '</div>';
         } else {
-            $configured_email = sanitize_email( get_option( 'ccf_recipient_email' ) );
+            $configured_email = sanitize_email( ccf_get_option( 'ccf_recipient_email', '' ) );
             $to               = ! empty( $configured_email ) ? $configured_email : get_option( 'admin_email' );
             $site_from        = ccf_get_from_address();
 
             $headers   = array( 'Content-Type: text/plain; charset=UTF-8' );
             $headers[] = 'Reply-To: ' . $email;
-            $headers[] = 'From: ' . ( get_option( 'ccf_disable_reply_to', 0 ) ? $site_from : $email );
+            $headers[] = 'From: ' . ( ccf_get_option( 'ccf_disable_reply_to', 0 ) ? $site_from : $email );
 
             $template_data = array(
                 'name'    => 'Subscriber',

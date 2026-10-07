@@ -71,8 +71,8 @@ function ccf_get_parsed_email( $subject_option, $default_subject, $body_option, 
 
 // Helper: Get verified site sender address
 function ccf_get_from_address() {
-    $from_email = ( get_option( 'ccf_smtp_enable', 0 ) && get_option( 'ccf_smtp_username' ) )
-        ? get_option( 'ccf_smtp_username' )
+    $from_email = ( ccf_get_option( 'ccf_smtp_enable', 0 ) && ccf_get_option( 'ccf_smtp_username' ) )
+        ? ccf_get_option( 'ccf_smtp_username' )
         : get_option( 'admin_email' );
 
     return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . ' <' . sanitize_email( $from_email ) . '>';
@@ -80,16 +80,16 @@ function ccf_get_from_address() {
 
 // Helper: Dynamic PHPMailer Configuration
 function ccf_apply_smtp_settings( $phpmailer ) {
-    if ( ! get_option( 'ccf_smtp_enable', 0 ) ) {
+    if ( ! ccf_get_option( 'ccf_smtp_enable', 0 ) ) {
         return;
     }
 
-    $host       = get_option( 'ccf_smtp_host' );
-    $port       = get_option( 'ccf_smtp_port', 587 );
-    $encryption = get_option( 'ccf_smtp_encryption', 'tls' );
-    $auth       = get_option( 'ccf_smtp_auth', 1 );
-    $username   = get_option( 'ccf_smtp_username' );
-    $password   = get_option( 'ccf_smtp_password' );
+    $host       = ccf_get_option( 'ccf_smtp_host' );
+    $port       = ccf_get_option( 'ccf_smtp_port', 587 );
+    $encryption = ccf_get_option( 'ccf_smtp_encryption', 'tls' );
+    $auth       = ccf_get_option( 'ccf_smtp_auth', 1 );
+    $username   = ccf_get_option( 'ccf_smtp_username' );
+    $password   = ccf_get_option( 'ccf_smtp_password' );
 
     if ( empty( $host ) ) {
         return;
@@ -219,7 +219,7 @@ function ccf_log_rejection ( $reason, $data ) {
 
     $log_file = $log_dir . '/ccf.log';
     $timestamp = current_time( 'Y-m-d H:i:s' );
-    $log_entry = sprintf( "[%s] | %-12s || Data: %s\n", $timestamp, $reason, $data );
+    $log_entry = sprintf( "[%s] | %-12s || %s\n", $timestamp, $reason, $data );
 
     return (bool) file_put_contents( $log_file, $log_entry, FILE_APPEND | LOCK_EX );
 }
