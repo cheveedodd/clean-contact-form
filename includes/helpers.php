@@ -195,3 +195,26 @@ function ccf_validate_antispam_token( $token ) {
 
     return true;
 }
+
+//Helper: Log rejected submissions for debugging and monitoring.
+function ccf_log_rejection ( $reason, $data ) {
+    $upload_dir = wp_upload_dir();
+    $log_dir = trailingslashit( $upload_dir['basedir'] ) . 'ccf_log';
+    if ( ! file_exists( $log_dir ) ) {
+        if ( ! wp_mkdir_p( $log_dir ) ) {
+            return false;
+        }
+        file_put_contents( $log_dir . '/index.php', "<?php\n// Silence is golden.\n" );
+        file_put_contents( $log_dir . '/.htaccess', "Order deny,allow\nDeny from all\n" );
+    }
+
+    if ( is_array( $data ) || is_object( $data ) ) {
+        $data = wp_json_encode( $data, JSON_PRETTY_PRINT );
+    }
+
+    $log_file = $log_dir . '/rejections.log';
+    $timestamp = date( 'Y-m-d H:i:s' );
+    $log_entry = "[$timestamp] Reason: $reason || Data: $data\n";
+
+    return (bool) file_put_contents( $log_file, $log_entry, FILE_APPEND | LOCK_EX );
+}
