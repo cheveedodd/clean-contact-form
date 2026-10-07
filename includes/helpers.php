@@ -169,27 +169,32 @@ function ccf_generate_antispam_token() {
 // Helper: Validate antispam token
 function ccf_validate_antispam_token( $token ) {
     if ( empty( $token ) ) {
+        ccf_log_rejection( 'token', 'Missing antispam token' );
         return false;
     }
 
     $decoded = base64_decode( $token, true );
     if (!$decoded || strpos( $decoded, ':' ) === false ) {
+        ccf_log_rejection( 'token', 'Invalid antispam token format' );
         return false;
     }
 
     list( $payload, $signature ) = explode( ':', $decoded, 2 );
     if ( strpos( $payload, '.' ) === false ) {
+        ccf_log_rejection( 'token', 'Invalid antispam token payload format' );
         return false;
     }
 
     list( $timestamp, $nonce ) = explode( '.', $payload, 2 );
     $expected_signature = hash_hmac( 'sha256', $payload, ccf_get_option( 'ccf_antispam_token_secret' ) );
     if ( ! hash_equals( $expected_signature, $signature ) ) {
+        ccf_log_rejection( 'token', 'Invalid antispam token signature' );
         return false;
     }
 
     $current_time = time();
     if ( $current_time - $timestamp > ccf_get_option( 'ccf_antispam_token_expiration' ) || $timestamp > $current_time ) {
+        ccf_log_rejection( 'token', 'Antispam token expired' );
         return false;
     }
 
