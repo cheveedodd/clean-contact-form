@@ -116,11 +116,13 @@ function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $ch
 
     // Anti-Spam: Honeypot
     if ( ccf_get_option( 'ccf_enable_honeypot' ) && ! empty( $post_data['ccf_website'] ) ) {
+        ccf_log_rejection( 'honeypot', 'Honeypot field filled' . $post_data['ccf_website'] );
         return $success_message;
     }
 
     // Anti-Spam: Link in name
     if ( ccf_get_option( 'ccf_enable_namenolink' ) && ! empty( $post_data['ccf_name'] ) && strpos( $post_data['ccf_name'], 'http' ) !== false ) {
+        ccf_log_rejection( 'namenolink', 'Link detected in name field - ' . $post_data['ccf_name'] );
         return $success_message;
     }
 
@@ -128,6 +130,7 @@ function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $ch
     if ( ccf_get_option( 'ccf_enable_timecheck' ) ) {
         $load_time = isset( $post_data['ccf_time'] ) ? intval( $post_data['ccf_time'] ) : time();
         if ( ( time() - $load_time ) < ccf_get_option( 'ccf_timecheck_threshold' ) ) {
+            ccf_log_rejection( 'timecheck', 'Form submitted too quickly' );
             return $success_message;
         }
     }
@@ -146,6 +149,7 @@ function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $ch
 
         foreach ( $blocked_words as $word ) {
             if ( ! empty( $word ) && strpos( $submission_text, $word ) !== false ) {
+                ccf_log_rejection( 'blocklist', 'Blocked word detected - ' . $word );
                 return $success_message;
             }
         }
@@ -156,6 +160,7 @@ function ccf_check_antispam_fields( $post_data, $nonce_action, $nonce_field, $ch
         $user_answer   = strtolower( trim( $post_data['ccf_qa_response'] ?? '' ) );
         $target_answer = strtolower( trim( ccf_get_option( 'ccf_qa_answer' ) ) );
         if ( $user_answer !== $target_answer ) {
+            ccf_log_rejection( 'qa', 'Incorrect answer to the security question' );
             return '<div class="ccf-message ccf-error">Incorrect answer to the security question. Please try again.</div>';
         }
     }
