@@ -138,13 +138,12 @@ function ccf_admin_page() {
             }
             ?>
             
+            <textarea readonly class="large-text code" rows="18" style="white-space: pre; font-family: monospace; font-size: 12px; resize: vertical;"><?php echo esc_textarea( ! empty( $log_content ) ? $log_content : 'Empty.' ); ?></textarea>
             <form method="post" style="margin-top: 15px;">
                 <?php wp_nonce_field( 'ccf_clear_log_action', 'ccf_clear_log_nonce' ); ?>
                 <input type="submit" name="ccf_clear_log" class="button button-secondary" value="Clear Log" onclick="return confirm('Are you sure you want to clear the log file?');" />
             </form>
-
-            <textarea readonly class="large-text code" rows="18" style="white-space: pre; font-family: monospace; font-size: 12px; resize: vertical;"><?php echo esc_textarea( ! empty( $log_content ) ? $log_content : 'Empty.' ); ?></textarea>
-
+            
         <?php else : ?>
 
             <form method="post" action="options.php">
