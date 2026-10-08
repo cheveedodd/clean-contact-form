@@ -358,8 +358,10 @@ function ccf_admin_page() {
                         <tr><th>Button Text</th><td><input type="text" name="ccf_color_btn_text" value="<?php echo esc_attr( ccf_get_option( 'ccf_color_btn_text' ) ); ?>" class="ccf-color-picker" /></td></tr>
                         <tr><th>Button Hover</th><td><input type="text" name="ccf_color_btn_hover_bg" value="<?php echo esc_attr( ccf_get_option( 'ccf_color_btn_hover_bg' ) ); ?>" class="ccf-color-picker" /></td></tr>
                     </table>
-                    <textarea name="ccf_custom_css" rows="8" class="large-text code"><?php echo esc_textarea( ccf_get_option( 'ccf_custom_css', '' ) ); ?></textarea>
-
+                    <table class="form-table">
+                        <tr><th>Custom CSS</th><td>Enter any additional CSS to customize the form appearance. This will be added to the page inline.</td></tr>
+                        <tr><th><</th><td><textarea name="ccf_custom_css" rows="8" class="large-text code"><?php echo esc_textarea( ccf_get_option( 'ccf_custom_css', '' ) ); ?></textarea></td></tr>
+                    </table>
                 <?php elseif ( $active_tab === 'smtp' ) : $encryption = ccf_get_option( 'ccf_smtp_encryption', 'tls' ); ?>
                     <table class="form-table">
                         <tr><th>Enable SMTP</th><td><label><input type="checkbox" name="ccf_smtp_enable" value="1" <?php checked( 1, ccf_get_option( 'ccf_smtp_enable', 0 ) ); ?> /> Enable custom SMTP routing.</label></td></tr>
