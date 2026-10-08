@@ -319,6 +319,15 @@ function ccf_admin_page() {
                             <td><input type="text" name="ccf_msg_success" value="<?php echo esc_attr( ccf_get_option( 'ccf_msg_success' ) ); ?>" class="large-text" /></td>
                         </tr>
                         <tr>
+                            <th scope="row">Error Message</th>
+                            <td><input type="text" name="ccf_msg_error" value="<?php echo esc_attr( ccf_get_option( 'ccf_msg_error' ) ); ?>" class="large-text" /></td>
+                        </tr>
+                    <table>
+                    <hr />
+                    <h3>Redirect On Success</h3>
+                    <p>If a submission is successful, you can redirect the user to a specific page or an external URL. Leave blank to display the success message.</p>
+                    <table class="form-table">
+                        <tr>
                             <th scope="row">Redirect Page</th>
                             <td>
                                 <?php
@@ -335,10 +344,7 @@ function ccf_admin_page() {
                             <th scope="row">Custom Redirect URL</th>
                             <td><input type="url" name="ccf_redirect_url" value="<?php echo esc_url( ccf_get_option( 'ccf_redirect_url', '' ) ); ?>" class="large-text" /></td>
                         </tr>
-                        <tr>
-                            <th scope="row">Error Message</th>
-                            <td><input type="text" name="ccf_msg_error" value="<?php echo esc_attr( ccf_get_option( 'ccf_msg_error' ) ); ?>" class="large-text" /></td>
-                        </tr>
+
                     </table>
 
                 <?php elseif ( $active_tab === 'styling' ) : ?>
