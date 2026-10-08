@@ -143,7 +143,7 @@ function ccf_admin_page() {
                 <?php wp_nonce_field( 'ccf_clear_log_action', 'ccf_clear_log_nonce' ); ?>
                 <input type="submit" name="ccf_clear_log" class="button button-secondary" value="Clear Log" onclick="return confirm('Are you sure you want to clear the log file?');" />
             </form>
-            
+
         <?php else : ?>
 
             <form method="post" action="options.php">
@@ -303,7 +303,12 @@ function ccf_admin_page() {
                         </tr>
                         <tr>
                             <th scope="row">Blocklist</th>
-                            <td><textarea name="ccf_blocklist" rows="4" class="large-text code"><?php echo esc_textarea( ccfget_option( 'ccf_blocklist', '' ) ); ?></textarea></td>
+                            <td>
+                                <label>
+                                    <textarea name="ccf_blocklist" rows="4" class="large-text code" placeholder=".ru, .cn, .ua, libero.it, yandex.com"><?php echo esc_textarea( ccfget_option( 'ccf_blocklist', '' ) ); ?></textarea>
+                                    Enter words or phrases separated by commas. Submissions containing these words in the name field, email, or message will be rejected.
+                                </label>
+                            </td>
                         </tr>
                     </table>
 
