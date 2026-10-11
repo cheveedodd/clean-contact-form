@@ -111,7 +111,7 @@ function ccf_admin_page() {
     }
 
     $defaults = ccf_get_default_options();
-    $allowed_tabs = array( 'email', 'security', 'messages', 'styling', 'smtp', 'logs' );
+    $allowed_tabs = array( 'email', 'security', 'messages', 'styling', 'smtp', 'view_activity' );
     $active_tab   = isset( $_GET['tab'] ) && in_array( $_GET['tab'], $allowed_tabs, true ) ? $_GET['tab'] : 'email';
     $admin_mail   = get_option( 'admin_email' );
     ?>
@@ -123,10 +123,10 @@ function ccf_admin_page() {
             <a href="?page=clean-contact-form&tab=messages" class="nav-tab <?php echo $active_tab === 'messages' ? 'nav-tab-active' : ''; ?>">Messages</a>
             <a href="?page=clean-contact-form&tab=styling" class="nav-tab <?php echo $active_tab === 'styling' ? 'nav-tab-active' : ''; ?>">Custom CSS</a>
             <a href="?page=clean-contact-form&tab=smtp" class="nav-tab <?php echo $active_tab === 'smtp' ? 'nav-tab-active' : ''; ?>">SMTP Settings</a>
-            <a href="?page=clean-contact-form&tab=logs" class="nav-tab <?php echo $active_tab === 'logs' ? 'nav-tab-active' : ''; ?>">Logs</a>
+            <a href="?page=clean-contact-form&tab=view_activity" class="nav-tab <?php echo $active_tab === 'view_activity' ? 'nav-tab-active' : ''; ?>">View Activity</a>
         </h2>
 
-        <?php if ( $active_tab === 'logs' ) : ?>
+        <?php if ( $active_tab === 'view_activity' ) : ?>
             <h3>Activity Log</h3>
             <p>Viewing plugin logs: <code>wp-content/uploads/ccf-logs/ccf.log</code></p>
             
@@ -139,7 +139,7 @@ function ccf_admin_page() {
             ?>
             
             <textarea readonly class="large-text code" rows="18" style="white-space: pre; font-family: monospace; font-size: 12px; resize: vertical;"><?php echo esc_textarea( ! empty( $log_content ) ? $log_content : 'Empty.' ); ?></textarea>
-            <form method="post" style="margin-top: 15px;">
+            <form method="post" action="?page=clean-contact-form&tab=view_activity" style="margin-top: 15px;">
                 <?php wp_nonce_field( 'ccf_clear_log_action', 'ccf_clear_log_nonce' ); ?>
                 <input type="submit" name="ccf_clear_log" class="button button-secondary" value="Clear Log" onclick="return confirm('Are you sure you want to clear the log file?');" />
             </form>
