@@ -219,6 +219,7 @@ function ccf_log_rejection ( $reason, $data ) {
 
     $log_file = $log_dir . '/ccf.log';
     $timestamp = current_time( 'Y-m-d H:i:s' );
+    $data = str_replace( array( "\r", "\n" ), ' ', $data );
     $log_entry = sprintf( "[%s] | %-12s || %s\n", $timestamp, $reason, $data );
 
     return (bool) file_put_contents( $log_file, $log_entry, FILE_APPEND | LOCK_EX );
