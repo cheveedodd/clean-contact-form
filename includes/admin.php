@@ -305,7 +305,7 @@ function ccf_admin_page() {
                             <th scope="row">Blocklist</th>
                             <td>
                                 <label>
-                                    <textarea name="ccf_blocklist" rows="4" class="large-text code" placeholder=".ru, .cn, .ua, libero.it, yandex.com"><?php echo esc_textarea( ccfget_option( 'ccf_blocklist', '' ) ); ?></textarea>
+                                    <textarea name="ccf_blocklist" rows="4" class="large-text code" placeholder=".ru, .cn, .ua, libero.it, yandex.com"><?php echo esc_textarea( ccf_get_option( 'ccf_blocklist', '' ) ); ?></textarea>
                                     Enter words or phrases separated by commas. Submissions containing these words in the name field, email, or message will be rejected.
                                 </label>
                             </td>
