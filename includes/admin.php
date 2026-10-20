@@ -123,11 +123,11 @@ function ccf_admin_page() {
             <a href="?page=clean-contact-form&tab=messages" class="nav-tab <?php echo $active_tab === 'messages' ? 'nav-tab-active' : ''; ?>">Messages</a>
             <a href="?page=clean-contact-form&tab=styling" class="nav-tab <?php echo $active_tab === 'styling' ? 'nav-tab-active' : ''; ?>">Custom CSS</a>
             <a href="?page=clean-contact-form&tab=smtp" class="nav-tab <?php echo $active_tab === 'smtp' ? 'nav-tab-active' : ''; ?>">SMTP Settings</a>
-            <a href="?page=clean-contact-form&tab=view_activity" class="nav-tab <?php echo $active_tab === 'view_activity' ? 'nav-tab-active' : ''; ?>">View Activity</a>
+            <a href="?page=clean-contact-form&tab=view_activity" class="nav-tab <?php echo $active_tab === 'view_activity' ? 'nav-tab-active' : ''; ?>">View Rejecrions</a>
         </h2>
 
         <?php if ( $active_tab === 'view_activity' ) : ?>
-            <h3>Activity Log</h3>
+            <h3>Rejection Log</h3>
             <p>Viewing plugin logs: <code>wp-content/uploads/ccf-logs/ccf.log</code></p>
             
             <?php
