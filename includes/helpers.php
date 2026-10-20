@@ -224,3 +224,53 @@ function ccf_log_rejection ( $reason, $data ) {
 
     return (bool) file_put_contents( $log_file, $log_entry, FILE_APPEND | LOCK_EX );
 }
+
+
+// Helper: Efficiently retrieve the last N lines from a log file.
+function ccf_get_last_log_lines( $file_path, $max_lines = 500 ) {
+    if ( ! file_exists( $file_path ) || ! is_readable( $file_path ) ) {
+        return '';
+    }
+
+    $fp = fopen( $file_path, 'rb' );
+    if ( ! $fp ) {
+        return '';
+    }
+
+    $lines       = array();
+    $buffer      = '';
+    $buffer_size = 4096;
+
+    fseek( $fp, 0, SEEK_END );
+    $current_pos = ftell( $fp );
+
+    while ( $current_pos > 0 && count( $lines ) < $max_lines ) {
+        $read_size   = min( $current_pos, $buffer_size );
+        $current_pos -= $read_size;
+
+        fseek( $fp, $current_pos );
+        $chunk  = fread( $fp, $read_size );
+        $buffer = $chunk . $buffer;
+
+        $chunk_lines = explode( "\n", $buffer );
+
+        // Keep the incomplete line in $buffer for the next chunk iteration
+        $buffer = array_shift( $chunk_lines );
+
+        while ( ! empty( $chunk_lines ) && count( $lines ) < $max_lines ) {
+            $line = array_pop( $chunk_lines );
+            if ( '' !== trim( $line ) ) {
+                $lines[] = $line;
+            }
+        }
+    }
+
+    // Capture remaining line at top of file
+    if ( count( $lines ) < $max_lines && '' !== trim( $buffer ) ) {
+        $lines[] = $buffer;
+    }
+
+    fclose( $fp );
+
+    return implode( "\n", $lines );
+}

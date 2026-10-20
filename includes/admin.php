@@ -131,11 +131,7 @@ function ccf_admin_page() {
             <p>Viewing plugin logs: <code>wp-content/uploads/ccf-logs/ccf.log</code></p>
             
             <?php
-            $log_content = '';
-            if ( file_exists( $log_file ) ) {
-                $lines       = file( $log_file );
-                $log_content = implode( '', array_reverse( $lines ) );
-            }
+            $log_content = ccf_get_last_log_lines( $log_file, 500 );
             ?>
             
             <textarea readonly class="large-text code" rows="18" style="white-space: pre; font-family: monospace; font-size: 12px; resize: vertical;"><?php echo esc_textarea( ! empty( $log_content ) ? $log_content : 'Empty.' ); ?></textarea>
