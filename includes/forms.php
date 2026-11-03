@@ -215,6 +215,7 @@ function ccf_render_form_html() {
 
                 $template_data = array(
                     'name'    => $name,
+                    'form'    => 'Contact',
                     'email'   => $email,
                     'message' => $message,
                 );
@@ -341,6 +342,7 @@ function ccf_render_mailing_list_form_html() {
 
             $template_data = array(
                 'name'    => 'Subscriber',
+                'form'    => 'Subscription',
                 'email'   => $email,
                 'message' => 'New mailing list subscription request.',
             );
