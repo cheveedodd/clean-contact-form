@@ -269,6 +269,15 @@ function ccf_admin_page() {
                             </td>
                         </tr>
                         <tr>
+                            <th scope="row">Honeypot Field</th>
+                            <td>
+                                <label>
+                                    <input type="checkbox" name="ccf_enable_honeypot" value="1" <?php checked( 1, ccf_get_option( 'ccf_enable_honeypot' ) ); ?> /> 
+                                    Add a hidden field to trap bots..
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
                             <th scope="row">Time Check</th>
                             <td>
                                 <label>
